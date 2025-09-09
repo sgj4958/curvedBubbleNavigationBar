@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <style>
+    body {
+        border: 1px solid #ddd;
+        margin: 5px;
+        overflow: hidden;
+        width: calc(100% - 10px);
+        height: calc(100vh - 10px);
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+		gap: 5px;
+    }
+
+    /* //// */
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		list-style: none;
+		font-family: 'Noto sans kr';
+		color: #333;
+	}
+
+	@property --pos {
+		syntax: '<percentage>';
+		inherits: true;
+		initial-value: 50%;
+	}
+	
+	:root {
+		--kakao: #FEE500;
+	}
+
+	nav {
+		--pos: 50%;
+		--circle: 60px;
+		--ratio: 1/2;
+		width: 100%;
+		height: var(--circle);
+		filter: drop-shadow(0 0px 1px #0005);
+
+		section {
+			width: inherit;
+			height: inherit;
+			background: #fff;
+			clip-path: shape(
+				from 0 0,
+				
+				hline to calc(var(--pos) - var(--circle) / 2 - calc(var(--circle) / (var(--ratio) * 4)) - calc(var(--circle) / (var(--ratio) * 16))),
+				curve by calc(var(--circle) / (var(--ratio) * 4)) calc(var(--circle) / (var(--ratio) * 8)) with calc(var(--circle) / (var(--ratio) * 8)) 0,
+				smooth by calc(var(--circle) / (var(--ratio) * 16)) calc(var(--circle) / (var(--ratio) * 16)) with 0 calc(var(--circle) / (var(--ratio) * 512)),
+				arc by var(--circle) 0 of calc(var(--circle) / 1.5),
+				smooth by calc(var(--circle) / (var(--ratio) * 16)) calc(var(--circle) / (var(--ratio) * -16)) with 0 calc(var(--circle) / (var(--ratio) * 512)),
+				curve by calc(var(--circle) / (var(--ratio) * 4)) calc(var(--circle) / (var(--ratio) * -8)) with calc(var(--circle) / (var(--ratio) * 8)) calc(var(--circle) / (var(--ratio) * -8)),
+
+				hline to 100%,
+				vline by 100%,
+				line to 0 100%,
+				close
+			);
+			position: absolute;
+			z-index: -1;
+			transition: --pos .3s;
+		}
+
+		div {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			z-index: 1;
+			justify-content: space-around;
+			align-items: center;
+			
+			li {
+				aspect-ratio: 1;
+				width: var(--circle);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 50%;
+
+				button {
+					width: 100%;
+					height: 100%;
+					appearance: none;
+					border: none;
+					background: none;
+					cursor: pointer;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					
+					span {
+						font-size: 12px;
+						&.material-symbols-outlined {
+							font-size: 26px;
+						}
+					}
+				}
+				&.selected {
+					background: #333;
+					animation: selected .5s forwards;
+					button span {
+						color: var(--kakao);
+					}
+				}
+			}
+		}
+	}
+
+	@keyframes selected {
+		0% {margin-bottom: -5px;}
+		70% {margin-bottom: calc(var(--circle) + 5px);}
+		100% {margin-bottom: var(--circle);}
+	}
+
+</style>
+</head>
+<body>
+
+	<nav>
+		<section></section>
+		<div>
+			<li><button><span class="material-symbols-outlined">home</span><span>Home</span></button></li>
+			<li><button><span class="material-symbols-outlined">search</span><span>검색</span></button></li>
+			<li class="selected"><button><span class="material-symbols-outlined">favorite</span><span>찜</span></button></li>
+			<li><button><span class="material-symbols-outlined">notifications</span><span>알림</span></button></li>
+			<li><button><span class="material-symbols-outlined">person</span><span>내정보</span></button></li>
+		</div>
+	</nav>
+
+</body>
+
+<script>
+	document.querySelectorAll("li").forEach((e, i, a) => {
+		e.addEventListener("click", () => {
+			a.forEach(e => e.classList.remove("selected"))
+			e.classList.add("selected")
+			e.closest("nav").style.setProperty("--pos", `${i * 100 / a.length + 10}%`)
+		})
+	})
+</script>
+</html>
